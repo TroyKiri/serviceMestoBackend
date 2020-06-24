@@ -1,7 +1,8 @@
-const cardsRouter = require("express").Router();
-const fs = require("fs");
-const path = require("path");
-const cardsArray = path.join(__dirname, "../data/cards.json");
+const cardsRouter = require('express').Router();
+const fs = require('fs');
+const path = require('path');
+
+const cardsArray = path.join(__dirname, '../data/cards.json');
 
 const cards = (callback) => {
   fs.readFile(cardsArray, (err, data) => {
@@ -9,10 +10,11 @@ const cards = (callback) => {
       console.log(err);
       return;
     }
-    return callback(JSON.parse(data));
+    callback(JSON.parse(data));
   });
-}
-cardsRouter.get("/cards", (req, res) => {
+};
+
+cardsRouter.get('/cards', (req, res) => {
   cards((data) => res.send(data));
 });
 
