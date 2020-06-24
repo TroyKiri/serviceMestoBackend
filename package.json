@@ -1,0 +1,19 @@
+{
+  "name": "servicemestobackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TroyKiri/serviceMestoBackend.git"
+  },
+  "author": "Kirill Troitsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TroyKiri/serviceMestoBackend/issues"
+  },
+  "homepage": "https://github.com/TroyKiri/serviceMestoBackend#readme"
+}
