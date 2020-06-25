@@ -14,7 +14,7 @@ const cards = (callback) => {
   });
 };
 
-cardsRouter.get('/cards', (req, res) => {
+cardsRouter.get('/', (req, res) => {
   cards((data) => res.send(data));
 });
 

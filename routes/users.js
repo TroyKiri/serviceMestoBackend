@@ -1,4 +1,5 @@
 const usersRouter = require('express').Router();
+const usersIdRouter = require('express').Router();
 const fs = require('fs');
 const path = require('path');
 
@@ -14,8 +15,21 @@ const users = (callback) => {
   });
 };
 
-usersRouter.get('/users', (req, res) => {
+usersRouter.get('/', (req, res) => {
   users((data) => res.send(data));
 });
 
-module.exports = usersRouter;
+usersIdRouter.get('/:id', (req, res) => {
+  users((data) => {
+    const userId = data.find((item) => req.params.id === item._id);
+    if (!userId) {
+      return res.status(404).send({ message: 'Нет пользователя с таким id' });
+    }
+    return res.send(userId);
+  });
+});
+
+module.exports = {
+  usersRouter,
+  usersIdRouter,
+};
