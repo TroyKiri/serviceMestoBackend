@@ -1,4 +1,6 @@
+const mongoose = require('mongoose');
 const Card = require('../models/card');
+const NotFound = require('../error/error');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
@@ -15,7 +17,15 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCardId = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+  if (mongoose.Types.ObjectId.isValid(req.params.cardId)) {
+    return Card.findById(req.params.cardId)
+      .orFail(() => new NotFound(`Карточки с таким id ${req.params.cardId} нет в базе`))
+      .then((card) => Card.deleteOne(card).then(() => res.send({ data: card })))
+      .catch((err) => {
+        const statusCode = err.statusCode || 500;
+        const message = statusCode === 500 ? 'Ошибка' : err.message;
+        res.status(statusCode).send({ message });
+      });
+  }
+  return res.status(400).send({ error: 'К сожалению, это неверный формат id карточки' });
 };

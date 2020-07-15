@@ -29,4 +29,4 @@ app.use((req, res, next) => {
 app.use('/cards', routerCard);
 app.use('/', invalidRout);
 
-app.listen(PORT);
+app.listen(PORT, () => console.log(`Порт запущенного сервера: ${PORT}`));

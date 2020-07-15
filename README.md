@@ -26,7 +26,5 @@
 ---
 ### Инструкция по развертыванию проекта:
 1. Клонируем репозиторий на свой компьютер командой (git clone https://github.com/TroyKiri/MestoExpressJS.git);
-2. Инициализируем npm командой *npm init*;
-3. Устанавливаем фреймворк Express командой *npm install express*;
-4. Устанавливаем пакет nodemon командой *npm run nodemon -D*;
-5. Запускаем проект командой *npm run start*.
+2. Для установки зависимостей вызываем команду *npm install*;
+3. Запускаем проект командой *npm run start*.
