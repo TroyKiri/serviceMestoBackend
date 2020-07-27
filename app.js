@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const invalidRout = require('./routes/invalid');
+const auth = require('./middlewares/auth');
+const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -18,15 +20,11 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use('/users', routerUser);
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5f0e06029abf7e0dd8704070',
-  };
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-  next();
-});
-app.use('/cards', routerCard);
+app.use('/users', auth, routerUser);
+app.use('/cards', auth, routerCard);
 app.use('/', invalidRout);
 
 app.listen(PORT, () => console.log(`Порт запущенного сервера: ${PORT}`));
