@@ -21,7 +21,7 @@ module.exports.deleteCardId = (req, res) => {
     return Card.findById(req.params.cardId)
       .orFail(() => new NotFound(`Карточки с таким id ${req.params.cardId} нет в базе`))
       .then((card) => {
-        if (card.owner === req.user._id) {
+        if (card.owner == req.user._id) {
           Card.deleteOne(card).then(() => res.send({ data: card }));
         } else {
           res.status(401).send({ message: 'Вы не можете удалять карточки, добавленные другим пользователем' });

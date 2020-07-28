@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFound = require('../error/error');
+const secretKey = require('../secret_key/secretKey');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -29,8 +30,7 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      console.log(token);
+      const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
@@ -56,6 +56,13 @@ module.exports.createUser = (req, res) => {
       email,
       password: hash,
     })
-      .then((user) => res.send({ data: user }))
+      .then((user) => res.send({
+        user: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+        },
+      }))
       .catch((err) => res.status(500).send({ message: err.message })));
 };
