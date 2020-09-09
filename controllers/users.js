@@ -2,30 +2,28 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const NotFound = require('../error/error');
+const NotFoundError = require('../errors/not-found-error');
+const NotCorrectReqError = require('../errors/not-correct-req-error');
 const secretKey = require('../secret_key/secretKey');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
-module.exports.getUserId = (req, res) => {
+module.exports.getUserId = (req, res, next) => {
   if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
     return User.findById(req.params.userId)
-      .orFail(() => new NotFound(`Пользователя с таким id ${req.params.userId} нет в базе`))
+      .orFail(() => {throw new NotFoundError(`Пользователя с таким id ${req.params.userId} нет в базе`)})
       .then((user) => res.send({ data: user }))
-      .catch((err) => {
-        const statusCode = err.statusCode || 500;
-        const message = statusCode === 500 ? 'Ошибка' : err.message;
-        res.status(statusCode).send({ message });
-      });
+      .catch(err => next(err));
   }
-  return res.status(400).send({ error: 'К сожалению, это неверный формат id' });
+  const err = new NotCorrectReqError('К сожалению, это неверный формат id пользователя');
+  return next(err)
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -33,14 +31,10 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
-    });
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -64,5 +58,5 @@ module.exports.createUser = (req, res) => {
           email: user.email,
         },
       }))
-      .catch((err) => res.status(500).send({ message: err.message })));
+      .catch(next));
 };

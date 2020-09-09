@@ -27,4 +27,10 @@ app.use('/users', auth, routerUser);
 app.use('/cards', auth, routerCard);
 app.use('/', invalidRout);
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
+  res.status(statusCode).send({ message });
+});
+
 app.listen(PORT, () => console.log(`Порт запущенного сервера: ${PORT}`));
