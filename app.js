@@ -6,6 +6,7 @@ const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 const invalidRout = require('./routes/invalid');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
@@ -20,6 +21,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -40,6 +43,8 @@ app.post('/signup', celebrate({
 app.use('/users', auth, routerUser);
 app.use('/cards', auth, routerCard);
 app.use('/', invalidRout);
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use((err, req, res, next) => {
