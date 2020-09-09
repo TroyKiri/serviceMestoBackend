@@ -20,7 +20,13 @@ module.exports.deleteCardId = (req, res) => {
   if (mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return Card.findById(req.params.cardId)
       .orFail(() => new NotFound(`Карточки с таким id ${req.params.cardId} нет в базе`))
-      .then((card) => Card.deleteOne(card).then(() => res.send({ data: card })))
+      .then((card) => {
+        if (card.owner.toString() === req.user._id) {
+          Card.deleteOne(card).then(() => res.send({ data: card }));
+        } else {
+          res.status(401).send({ message: 'Вы не можете удалять карточки, добавленные другим пользователем' });
+        }
+      })
       .catch((err) => {
         const statusCode = err.statusCode || 500;
         const message = statusCode === 500 ? 'Ошибка' : err.message;
