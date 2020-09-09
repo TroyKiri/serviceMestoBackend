@@ -15,12 +15,12 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserId = (req, res, next) => {
   if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
     return User.findById(req.params.userId)
-      .orFail(() => {throw new NotFoundError(`Пользователя с таким id ${req.params.userId} нет в базе`)})
+      .orFail(() => { throw new NotFoundError(`Пользователя с таким id ${req.params.userId} нет в базе`); })
       .then((user) => res.send({ data: user }))
-      .catch(err => next(err));
+      .catch((err) => next(err));
   }
   const err = new NotCorrectReqError('К сожалению, это неверный формат id пользователя');
-  return next(err)
+  return next(err);
 };
 
 module.exports.login = (req, res, next) => {

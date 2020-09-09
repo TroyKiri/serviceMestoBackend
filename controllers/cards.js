@@ -18,18 +18,18 @@ module.exports.createCard = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.deleteCardId = (req, res,next) => {
+module.exports.deleteCardId = (req, res, next) => {
   if (mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return Card.findById(req.params.cardId)
-      .orFail(() => { throw new NotFoundError(`Карточки с таким id ${req.params.cardId} нет в базе`)})
+      .orFail(() => { throw new NotFoundError(`Карточки с таким id ${req.params.cardId} нет в базе`); })
       .then((card) => {
         if (card.owner.toString() === req.user._id) {
           Card.deleteOne(card).then(() => res.send({ data: card }));
         } else {
-          throw new NotCorrectDataError(`Вы не можете удалять карточки, добавленные другим пользователем`);
+          throw new NotCorrectDataError('Вы не можете удалять карточки, добавленные другим пользователем');
         }
       })
-      .catch(err => next(err));
+      .catch((err) => next(err));
   }
   const err = new NotCorrectReqError('К сожалению, это неверный формат id карточки');
   return next(err);

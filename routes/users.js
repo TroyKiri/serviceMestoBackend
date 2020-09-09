@@ -4,9 +4,9 @@ const { getUsers, getUserId } = require('../controllers/users');
 
 routerUser.get('/', getUsers);
 routerUser.get('/:userId', celebrate({
-    params: Joi.object().keys({
-      userId: Joi.string().alphanum().length(24),
-    }),
-  }), getUserId);
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), getUserId);
 
 module.exports = routerUser;

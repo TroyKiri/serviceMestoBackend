@@ -4,6 +4,7 @@
     "no-underscore-dangle": "off",
     "linebreak-style": 0,
     "no-useless-escape": 0,
-    "eqeqeq": "off"
+    "eqeqeq": "off",
+    "no-unused-vars": "off"
   }
 }
