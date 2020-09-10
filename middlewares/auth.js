@@ -15,8 +15,8 @@ module.exports = (req, res, next) => {
   let payload;
   try {
     payload = jwt.verify(token, secretKey);
-  } catch (err) {
-    err = new NotCorrectDataError('Необходима авторизация');
+  } catch (e) {
+    const err = new NotCorrectDataError('Необходима авторизация');
     return next(err);
   }
 
