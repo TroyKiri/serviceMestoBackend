@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-error');
 const NotCorrectReqError = require('../errors/not-correct-req-error');
+const NoUniqueEmailError = require('../errors/unique-email-error');
 const devSecret = require('../secret_key/secretKey');
 
 module.exports.getUsers = (req, res, next) => {
@@ -59,5 +60,8 @@ module.exports.createUser = (req, res, next) => {
           email: user.email,
         },
       }))
-      .catch(next));
+      .catch((e) => {
+        const err = new NoUniqueEmailError('Пользователь с таким email уже зарегистрирован');
+        return next(err);
+      }));
 };
