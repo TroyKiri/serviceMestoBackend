@@ -1,3 +1,3 @@
-const secretKey = 'some-secret-key';
+const devSecret = 'some-secret-key';
 
-module.exports = secretKey;
+module.exports = devSecret;
